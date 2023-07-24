@@ -1,0 +1,6 @@
+pandas~=2.0.3
+streamlit~=1.24.1
+scapy~=2.5.0
+numpy~=1.25.1
+scipy~=1.11.1
+cicflowmeter~=0.1.6
