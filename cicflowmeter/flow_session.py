@@ -102,7 +102,7 @@ class FlowSession(DefaultSession):
     def garbage_collect(self, latest_time) -> None:
         # TODO: Garbage Collection / Feature Extraction should have a separate thread
         if not self.url_model:
-            # print("Garbage Collection Began. Flows = {}".format(len(self.flows)))
+            print("Garbage Collection Began. Flows = {}".format(len(self.flows)))
             pass
         keys = list(self.flows.keys())
         for k in keys:
@@ -126,7 +126,7 @@ class FlowSession(DefaultSession):
 
                 del self.flows[k]
         if not self.url_model:
-            # print("Garbage Collection Finished. Flows = {}".format(len(self.flows)))
+            print("Garbage Collection Finished. Flows = {}".format(len(self.flows)))
             pass
 
 def generate_session_class(output_mode, output_file, url_model):

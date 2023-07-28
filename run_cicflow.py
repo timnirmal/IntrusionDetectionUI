@@ -39,9 +39,8 @@ if __name__ == '__main__':
     sniffer.start()
 
     try:
-        reader_thread = threading.Thread(target=read_flow_csv)
-        reader_thread.start()
-
+        # reader_thread = threading.Thread(target=read_flow_csv)
+        # reader_thread.start()
         sniffer.join()
     except KeyboardInterrupt:
         sniffer.stop()
