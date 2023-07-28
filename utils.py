@@ -14,11 +14,17 @@ async def consumer(graphs, selected_channels, window_size, status, st_df):
     windows = defaultdict(partial(deque, [0]*window_size, maxlen=window_size))
 
     async with aiohttp.ClientSession(trust_env = True) as session:
+        print("1")
         status.subheader(f"Connecting to {WS_CONN}")
+        print("1 Connecting to: ", WS_CONN)
         async with session.ws_connect(WS_CONN) as websocket:
+            print("1 Connected to done: ", WS_CONN)
             status.subheader(f"Connected to: {WS_CONN}")
+            print(websocket)
             async for message in websocket:
+                print("1 Message: ", message)
                 data = message.json()
+                print("1 Data: ", data)
 
                 try:
                     # id data is empty
