@@ -11,17 +11,17 @@ import pandas as pd
 import streamlit
 import streamlit as st
 
-from utils import consumer, consumer_one
+from utils import consumer
 
 
-async def consumer_anom(graphs, selected_channels, window_size, status, st_df):
+async def consumer_anom(status, st_df, st_df_1_1):
     WS_CONN = "ws://localhost:8000/anomalities"
-    windows = defaultdict(partial(deque, [0] * window_size, maxlen=window_size))
+
     async with aiohttp.ClientSession(trust_env=True) as session:
-        status.subheader(f"Connecting to {WS_CONN}")
+        # status.subheader(f"Connecting to {WS_CONN}")
         async with session.ws_connect(WS_CONN) as websocket:
-            status.subheader(f"Connected to: {WS_CONN}")
-            print("2 Connected to: ", WS_CONN)
+            # status.subheader(f"Connected to: {WS_CONN}")
+            # print("2 Connected to: ", WS_CONN)
             async for message in websocket:
                 data = message.json()
                 try:
@@ -29,7 +29,12 @@ async def consumer_anom(graphs, selected_channels, window_size, status, st_df):
                     if not data:
                         print("No data")
                     else:
-                        st_df.write(data)
+                        # data is {"anomalies": an_count, "non_anomalies": non_an_count}
+                        anomaly_count = data["anomalies"]
+                        non_anomaly_count = data["non_anomalies"]
+                        # style red, font size 20
+                        st_df.markdown(f'<p style="color: red; font-size: 20px;">Anomaly count: {anomaly_count}</p>', unsafe_allow_html=True)
+                        st_df_1_1.markdown(f'<p style="color: green; font-size: 20px;">Non-Anomaly count: {non_anomaly_count}</p>', unsafe_allow_html=True)
                         pass
 
                 except Exception as e:
