@@ -1,5 +1,7 @@
 import asyncio
 import json
+from time import sleep
+
 import loguru
 
 import aiohttp
@@ -12,6 +14,10 @@ import streamlit
 import streamlit as st
 
 from utils import consumer
+
+from loguru import logger
+
+logger.add("debug.log")
 
 
 async def consumer_anom(status, st_df, st_df_1_1):
@@ -77,11 +83,43 @@ async def consumer_interfaces(status, st_df):
                         st.write("Selected interfaces: ", selected_interfaces)
                         st.write("Selected interfaces: ", st.session_state.selected_interfaces)
                         columns = [col.empty() for col in st.columns(len(selected_interfaces))]
-                        print(st.session_state.selected_interfaces)
+                        # print(st.session_state.selected_interfaces)
                         button = st.button("Start")
 
 
 
+
+                except Exception as e:
+                    if e != "TypeError: string indices must be integers":
+                        print(e)
+                    else:
+                        print("1 ")
+
+
+
+async def consumer_push(status, st_df):
+    WS_CONN = "ws://localhost:8000/anomaly_push"
+
+    async with aiohttp.ClientSession(trust_env=True) as session:
+        # status.subheader(f"Connecting to {WS_CONN}")
+        async with session.ws_connect(WS_CONN) as websocket:
+            # status.subheader(f"Connected to: {WS_CONN}")
+            print("2 Connected to: ", websocket)
+            async for message in websocket:
+                data = message.json()
+                try:
+                    # id data is empty
+                    if not data:
+                        print("No data")
+                    else:
+                        data_json = json.loads(data)
+                        df = pd.DataFrame(data_json)
+                        st_df.dataframe(df)                   # <====== This is where data comes
+
+                        # if data is not empty list
+                        if data != []:
+                            logger.info("Data: ", data)
+                        pass
 
                 except Exception as e:
                     if e != "TypeError: string indices must be integers":
