@@ -1,7 +1,9 @@
-from cicflowmeter.sniffer import main, create_sniffer
-import threading
 import time
+
 import pandas as pd
+
+from cicflowmeter.sniffer import create_sniffer
+
 
 def read_flow_csv():
     while True:
@@ -20,12 +22,14 @@ def read_flow_csv():
 
         time.sleep(5)  # Adjust the interval for reading the file here
 
+
 if __name__ == '__main__':
     # print start time
     print("Start time: ", time.strftime("%H:%M:%S", time.localtime()))
 
     # delete the flow.csv file
     import os
+
     if os.path.exists("flow.csv"):
         os.remove("flow.csv")
 

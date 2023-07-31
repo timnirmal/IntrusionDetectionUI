@@ -6,7 +6,7 @@ from cicflowmeter.flow_session import generate_session_class
 
 
 def create_sniffer(
-    input_file, input_interface, output_mode, output_file, url_model=None
+        input_file, input_interface, output_mode, output_file, url_model=None
 ):
     assert (input_file is None) ^ (input_interface is None)
 
@@ -92,7 +92,3 @@ def main():
         sniffer.stop()
     finally:
         sniffer.join()
-
-
-# if __name__ == "__main__":
-#     main()

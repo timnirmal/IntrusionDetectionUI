@@ -129,6 +129,7 @@ class FlowSession(DefaultSession):
             print("Garbage Collection Finished. Flows = {}".format(len(self.flows)))
             pass
 
+
 def generate_session_class(output_mode, output_file, url_model):
     return type(
         "NewFlowSession",
