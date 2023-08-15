@@ -29,7 +29,7 @@ async def consumer_anom(st_df, st_df_1_1):
 
                 except Exception as e:
                     if e != "TypeError: string indices must be integers":
-                        print(e)
+                        print(e, "bb")
 
 
 async def consumer_interfaces(status, st_df):
@@ -48,7 +48,7 @@ async def consumer_interfaces(status, st_df):
 
                 except Exception as e:
                     if e != "TypeError: string indices must be integers":
-                        print(e)
+                        print(e, "cc")
 
 
 async def consumer_push(status, st_df):
@@ -63,7 +63,6 @@ async def consumer_push(status, st_df):
                     else:
                         data_json = json.loads(data)
                         df = pd.DataFrame(data_json)
-                        st_df.dataframe(df)  # <====== This is where data comes
 
                         # if data is not empty list
                         if data != []:

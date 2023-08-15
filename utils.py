@@ -24,6 +24,7 @@ async def consumer(status, st_df):
                         raise Exception("Data retrieved is not in JSON format")
 
                     df = pd.DataFrame(data_json)
+                    st_df.dataframe(df)  # <====== This is where data comes
 
                     # save as flow_temp.csv
                     df.to_csv("flow_temp.csv", index=False)
@@ -38,4 +39,4 @@ async def consumer(status, st_df):
                     st.dataframe(filtered_df.drop(columns=["interface"]))
                 except Exception as e:
                     if e != "TypeError: string indices must be integers":
-                        print(e)
+                        print(e, "aa")

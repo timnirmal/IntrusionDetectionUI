@@ -13,13 +13,15 @@ async def run_ws_connection(status, st_df):
         await consumer(status, st_df)
     except Exception as e:
         print("1:", e)
+        st.text(e)
 
 
-async def run_ws_connection_anom(status, st_df, st_df_1_1):
+async def run_ws_connection_anom(st_df, st_df_1_1):
     try:
         await consumer_anom(st_df, st_df_1_1)
     except Exception as e:
         print("2:", e)
+        st.text(e)
 
 
 async def run_ws_connection_push(status, st_df):
@@ -65,4 +67,5 @@ async def main():
 
 
 if __name__ == "__main__":
+    print("The app is running")
     asyncio.run(main())
