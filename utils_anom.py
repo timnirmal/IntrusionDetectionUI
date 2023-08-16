@@ -8,7 +8,7 @@ from loguru import logger
 logger.add("debug.log")
 
 
-async def consumer_anom(st_df, st_df_1_1):
+async def consumer_anom(anomaly_count, non_anomaly_count):
     WS_CONN = "ws://localhost:8000/anomalities"
     async with aiohttp.ClientSession(trust_env=True) as session:
         async with session.ws_connect(WS_CONN) as websocket:
@@ -18,12 +18,12 @@ async def consumer_anom(st_df, st_df_1_1):
                     if not data:
                         print("No data")
                     else:
-                        anomaly_count = data["anomalies"]
-                        non_anomaly_count = data["non_anomalies"]
-                        st_df.markdown(f'<p style="color: red; font-size: 20px;">Anomaly count: {anomaly_count}</p>',
+                        anomaly_cnt = data["anomalies"]
+                        non_anomaly_cnt = data["non_anomalies"]
+                        anomaly_count.markdown(f'<p style="color: red; font-size: 20px;">Anomaly count: {anomaly_cnt}</p>',
                                        unsafe_allow_html=True)
-                        st_df_1_1.markdown(
-                            f'<p style="color: green; font-size: 20px;">Non-Anomaly count: {non_anomaly_count}</p>',
+                        non_anomaly_count.markdown(
+                            f'<p style="color: green; font-size: 20px;">Non-Anomaly count: {non_anomaly_cnt}</p>',
                             unsafe_allow_html=True)
                         pass
 
@@ -44,14 +44,15 @@ async def consumer_interfaces(status, st_df):
                     if not data:
                         print("No data")
                     else:
-                        st.write(data)
+                        # st.write(data)
+                        pass
 
                 except Exception as e:
                     if e != "TypeError: string indices must be integers":
                         print(e, "cc")
 
 
-async def consumer_push(status, st_df):
+async def consumer_push(push_df):
     WS_CONN = "ws://localhost:8000/anomaly_push"
     async with aiohttp.ClientSession(trust_env=True) as session:
         async with session.ws_connect(WS_CONN) as websocket:
@@ -64,6 +65,8 @@ async def consumer_push(status, st_df):
                         data_json = json.loads(data)
                         df = pd.DataFrame(data_json)
 
+                        push_df.dataframe(df)
+
                         # if data is not empty list
                         if data != []:
                             logger.info("Data: ", data)
@@ -72,3 +75,32 @@ async def consumer_push(status, st_df):
                 except Exception as e:
                     if e != "TypeError: string indices must be integers":
                         print(e)
+
+
+async def consumer_view_anom(select_anomaly, st_df_anom):
+    WS_CONN = "ws://localhost:8000/view-anomalies"
+    async with aiohttp.ClientSession(trust_env=True) as session:
+        async with session.ws_connect(WS_CONN) as websocket:
+            async for message in websocket:
+                data = message.json()
+                try:
+                    if not data:
+                        print("No data")
+                    else:
+                        # print(data)
+                        data_json = json.loads(data)
+                        df = pd.DataFrame(data_json)
+
+                        df["interface"] = df["interface"].str.split("\\\\").str[1]
+                        df["interface"] = df["interface"].str.split("_").str[0]
+
+                        anomaly_types = df["rf"].unique()
+
+                        selected_anom = select_anomaly.selectbox("Select Anomaly Type", anomaly_types)
+                        filtered_df = df[df["rf"] == selected_anom]
+                        st_df_anom.dataframe(filtered_df.drop(columns=["rf"]))
+                        pass
+
+                except Exception as e:
+                    if e != "TypeError: string indices must be integers":
+                        print(e, "bb")

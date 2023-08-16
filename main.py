@@ -3,30 +3,37 @@ import asyncio
 import streamlit as st
 
 from utils import consumer
-from utils_anom import consumer_anom, consumer_push
+from utils_anom import consumer_anom, consumer_push, consumer_view_anom
 
 st.set_page_config(page_title="Network Traffic Monitor", layout="wide")
 
 
-async def run_ws_connection(status, st_df):
+async def run_ws_connection(select_flow, st_df):
     try:
-        await consumer(status, st_df)
+        await consumer(select_flow, st_df)
     except Exception as e:
         print("1:", e)
         st.text(e)
 
 
-async def run_ws_connection_anom(st_df, st_df_1_1):
+async def run_ws_connection_anom(anomaly_count, non_anomaly_count):
     try:
-        await consumer_anom(st_df, st_df_1_1)
+        await consumer_anom(anomaly_count, non_anomaly_count)
     except Exception as e:
         print("2:", e)
         st.text(e)
 
 
-async def run_ws_connection_push(status, st_df):
+async def run_ws_connection_push(push_df):
     try:
-        await consumer_push(status, st_df)
+        await consumer_push(push_df)
+    except Exception as e:
+        print("3:", e)
+
+
+async def run_ws_connection_view_anom(select_anomaly, st_df_anom):
+    try:
+        await consumer_view_anom(select_anomaly, st_df_anom)
     except Exception as e:
         print("3:", e)
 
@@ -39,29 +46,33 @@ async def run_ws_connection_push(status, st_df):
 
 
 async def main():
+    # center title "Real-time Network Traffic Monitor"
     st.title("Real-time Network Traffic Monitor")
 
+    st.subheader("Push Anomalies : ")
+    push_df = st.empty()
+
     st.subheader("Anomalies : ")
-    status_2 = st.empty()
-    st_df_2 = st.empty()
-    st_df_2_1 = st.empty()
+    anomaly_count = st.empty()
+    non_anomaly_count = st.empty()
 
-    st.subheader("Interfaces : ")
-    status_1 = st.empty()
-    st_df_1 = st.empty()
+    st.subheader("View Data : ")
+    select_flow = st.empty()
+    st_df = st.empty()
 
-    status_3 = st.empty()
-    st_df_3 = st.empty()
+    st.subheader("View Anomalies : ")
+    select_anomaly = st.empty()
+    st_df_anom = st.empty()
 
     # Create two asyncio tasks and gather them to run simultaneously
-    # ws_task_1 = asyncio.create_task(run_ws_connection(selected_channels_1, columns_1, window_size_1, status_1, st_df_1))
-    ws_task_2 = asyncio.create_task(run_ws_connection_anom(st_df_2, st_df_2_1))
-    ws_task_1 = asyncio.create_task(run_ws_connection(status_1, st_df_1))
-    # ws_task_3 = asyncio.create_task(run_ws_connection_push(status_3, st_df_3))
+    ws_task_1 = asyncio.create_task(run_ws_connection_anom(anomaly_count, non_anomaly_count))
+    ws_task_2 = asyncio.create_task(run_ws_connection(select_flow, st_df))
+    ws_task_3 = asyncio.create_task(run_ws_connection_view_anom(select_anomaly, st_df_anom))
+    ws_task_4 = asyncio.create_task(run_ws_connection_push(push_df))
 
     # Gather both tasks to run simultaneously
-    # await asyncio.gather(ws_task_1, ws_task_2, ws_task_3)
-    await asyncio.gather(ws_task_1, ws_task_2)
+    await asyncio.gather(ws_task_1, ws_task_2, ws_task_3)
+    # await asyncio.gather(ws_task_1, ws_task_2)
 
     print("The app is running -- stream")
 

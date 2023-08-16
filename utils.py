@@ -5,7 +5,7 @@ import pandas as pd
 import streamlit as st
 
 
-async def consumer(status, st_df):
+async def consumer(select_flow, st_df):
     WS_CONN = "ws://localhost:8000/retrive_data"
     async with aiohttp.ClientSession(trust_env=True) as session:
         async with session.ws_connect(WS_CONN) as websocket:
@@ -24,7 +24,7 @@ async def consumer(status, st_df):
                         raise Exception("Data retrieved is not in JSON format")
 
                     df = pd.DataFrame(data_json)
-                    st_df.dataframe(df)  # <====== This is where data comes
+                    # st_df.dataframe(df)  # <====== This is where data comes
 
                     # save as flow_temp.csv
                     df.to_csv("flow_temp.csv", index=False)
@@ -33,10 +33,10 @@ async def consumer(status, st_df):
 
                     interfaces = df["interface"].unique()
 
-                    selected_interface = st.selectbox("Select Interface", interfaces)
+                    selected_interface = select_flow.selectbox("Select Interface", interfaces)
                     filtered_df = df[df["interface"] == selected_interface]
 
-                    st.dataframe(filtered_df.drop(columns=["interface"]))
+                    st_df.dataframe(filtered_df.drop(columns=["interface"]))
                 except Exception as e:
                     if e != "TypeError: string indices must be integers":
                         print(e, "aa")
