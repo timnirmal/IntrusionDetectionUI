@@ -38,19 +38,9 @@ async def run_ws_connection_view_anom(select_anomaly, st_df_anom):
         print("3:", e)
 
 
-# async def run_ws_connection_interfaces(status, st_df):
-#     try:
-#         await consumer_interfaces(status, st_df)
-#     except Exception as e:
-#         print("4:", e)
-
-
 async def main():
     # center title "Real-time Network Traffic Monitor"
     st.title("Real-time Network Traffic Monitor")
-
-    st.subheader("Push Anomalies : ")
-    push_df = st.empty()
 
     st.subheader("Anomalies : ")
     anomaly_count = st.empty()
@@ -64,15 +54,19 @@ async def main():
     select_anomaly = st.empty()
     st_df_anom = st.empty()
 
-    # Create two asyncio tasks and gather them to run simultaneously
+    # st.subheader("Push Anomalies : ")
+    # push_df = st.empty()
+
+
+# Create two asyncio tasks and gather them to run simultaneously
     ws_task_1 = asyncio.create_task(run_ws_connection_anom(anomaly_count, non_anomaly_count))
     ws_task_2 = asyncio.create_task(run_ws_connection(select_flow, st_df))
     ws_task_3 = asyncio.create_task(run_ws_connection_view_anom(select_anomaly, st_df_anom))
-    ws_task_4 = asyncio.create_task(run_ws_connection_push(push_df))
+    # ws_task_4 = asyncio.create_task(run_ws_connection_push(push_df))
 
     # Gather both tasks to run simultaneously
     await asyncio.gather(ws_task_1, ws_task_2, ws_task_3)
-    # await asyncio.gather(ws_task_1, ws_task_2)
+    # await asyncio.gather(ws_task_1, ws_task_2, ws_task_3, ws_task_4)
 
     print("The app is running -- stream")
 

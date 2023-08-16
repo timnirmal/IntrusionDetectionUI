@@ -2,7 +2,6 @@ import json
 
 import aiohttp
 import pandas as pd
-import streamlit as st
 from loguru import logger
 
 logger.add("debug.log")
@@ -20,8 +19,9 @@ async def consumer_anom(anomaly_count, non_anomaly_count):
                     else:
                         anomaly_cnt = data["anomalies"]
                         non_anomaly_cnt = data["non_anomalies"]
-                        anomaly_count.markdown(f'<p style="color: red; font-size: 20px;">Anomaly count: {anomaly_cnt}</p>',
-                                       unsafe_allow_html=True)
+                        anomaly_count.markdown(
+                            f'<p style="color: red; font-size: 20px;">Anomaly count: {anomaly_cnt}</p>',
+                            unsafe_allow_html=True)
                         non_anomaly_count.markdown(
                             f'<p style="color: green; font-size: 20px;">Non-Anomaly count: {non_anomaly_cnt}</p>',
                             unsafe_allow_html=True)
@@ -44,7 +44,6 @@ async def consumer_interfaces(status, st_df):
                     if not data:
                         print("No data")
                     else:
-                        # st.write(data)
                         pass
 
                 except Exception as e:
@@ -66,11 +65,6 @@ async def consumer_push(push_df):
                         df = pd.DataFrame(data_json)
 
                         push_df.dataframe(df)
-
-                        # if data is not empty list
-                        if data != []:
-                            logger.info("Data: ", data)
-                        pass
 
                 except Exception as e:
                     if e != "TypeError: string indices must be integers":

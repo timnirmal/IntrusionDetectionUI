@@ -1,5 +1,5 @@
-pandas~=2.0.3
-streamlit~=1.25.0
-cicflowmeter~=0.1.6
-aiohttp~=3.8.5
-loguru~=0.7.0
+pandas
+streamlit
+cicflowmeter
+aiohttp
+loguru

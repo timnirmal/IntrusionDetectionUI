@@ -2,7 +2,6 @@ import json
 
 import aiohttp
 import pandas as pd
-import streamlit as st
 
 
 async def consumer(select_flow, st_df):
