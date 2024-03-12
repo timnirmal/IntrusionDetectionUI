@@ -10,3 +10,7 @@ Data used
 - [IDS 2018 Intrusion CSVs (CSE-CIC-IDS2018)](https://www.kaggle.com/datasets/solarmainframe/ids-intrusion-csv) - Shows DDoS Attacks of Various Formats from the University of New Brunswick
 
 
+The dataset was processed and implimented both supervised learning and unsupervised learning methods.
+
+Unsupervised Techiniques:
+Autoencoders were used.
