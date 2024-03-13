@@ -7,7 +7,7 @@ This project contain two parts.
 To monitor the network realtime CICFlowMeter library is used. But library had to be modified to match the project requrements. 
 
 Data used
-- [CICIDS2017](https://www.kaggle.com/datasets/cicdataset/cicids2017/data) - Shows DDoS Attacks of Various Formats from the University of New Brunswick
+- [CICIDS2017](https://www.kaggle.com/datasets/cicdataset/cicids2017/data) - Intrusion Detection Evaluation Dataset
 
 
 The dataset was processed and implimented both supervised learning and unsupervised learning methods.
